@@ -202,9 +202,13 @@ def extract_info_from_pdf(pdf_file, id):
 def convert_pdfs_to_json(root_dir):
     data_list = []
     id_count = 1
+    total_files = sum(len(files) for _, _, files in os.walk(root_dir))
+    count = 0
     
     for dirpath, dirs, files in os.walk(root_dir):
         for filename in fnmatch.filter(files, '*.pdf'):
+            count += 1
+            print(f"\n\nProcessing {filename} {count}/{total_files}")
             pdf_file = os.path.join(dirpath, filename)
             data = extract_info_from_pdf(pdf_file, id_count)
             if data is not None: 

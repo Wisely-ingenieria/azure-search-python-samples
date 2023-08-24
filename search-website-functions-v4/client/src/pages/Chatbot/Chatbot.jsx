@@ -51,7 +51,7 @@ export const Chatbot = () => {
   }, [messages]);
 
   return (
-    <div className="flex-grow bg-slate-100 ml-64 mr-64 p-4 flex flex-col">
+    <div className="flex-grow bg-slate-100 ml-32 mr-32 p-4 flex flex-col">
       <div className="bg-white rounded shadow-md flex-1 flex flex-col overflow-hidden">
         <h1 className="bg-neutral text-2xl text-white p-3 text-center">
           Chatbot
