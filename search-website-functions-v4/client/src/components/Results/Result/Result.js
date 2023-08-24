@@ -22,9 +22,9 @@ export default function Result(props) {
                 <h2 className="card-title"> <a href={`/details/${props.document.id}`}>
                     <h6 className="title-style">{props.document.filename}</h6>
                 </a></h2>
-                <p className='whitespace-pre-line p-4 bg-gray-100 rounded-lg'>{props.document.content.substring(0, 200).trim()} ...</p>
+                <p className='whitespace-pre-line p-4 bg-gray-100 rounded-lg'>{props.document.summary}</p>
                 <div className="card-actions flex justify-between items-center">
-                    <div className="badge badge-accent">{props.document.author}</div>
+                    <div className="badge badge-accent">{props.document.sender}</div>
                     <a href={`/details/${props.document.id}`}>
                         <h6 className="btn btn-primary">Leer carta</h6>
                     </a>
