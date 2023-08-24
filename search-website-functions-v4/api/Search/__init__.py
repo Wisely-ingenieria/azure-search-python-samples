@@ -77,6 +77,10 @@ def new_shape(docs):
         new_shape["last_modified_date"] = item["last_modified_date"]
         new_shape["number_of_pages"] = item["number_of_pages"]
         new_shape["content"] = item["content"]
+        new_shape["summary"] = item["summary"]
+        new_shape["sentiment"] = item["sentiment"]
+        new_shape["date"] = item["date"]
+        new_shape["sender"] = item["sender"]
         
         new_document["document"] = new_shape
 
@@ -84,7 +88,7 @@ def new_shape(docs):
 
     return list(client_side_expected_shape)
 
-def azure_search(q, top=10, skip=0, filters=[]):
+def azure_search(q, top=2, skip=0, filters=[]):
     facets = environment_vars["search_facets"]
     facetKeys = read_facets(facets)
     filter = ""
@@ -99,8 +103,6 @@ def azure_search(q, top=10, skip=0, filters=[]):
         include_total_count=True,
     )
     returned_docs = new_shape(search_results)
-    returned_count = search_results.get_count()
-    returned_facets = search_results.get_facets()
     full_response = {}
     full_response["count"] = search_results.get_count()
     full_response["facets"] = search_results.get_facets()
