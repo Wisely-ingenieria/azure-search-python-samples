@@ -4,4 +4,4 @@ DECOMPOSE_INSTRUCTIONS = """You are now going to decompose the user's [QUERY] in
 
 EXAMPLES_DECOMPOSE = """[QUERY]\nComo se obtienen los caudales afluentes utilizados en la programación del Sistema Eléctrico Nacional del 17 de agosto de 2023?\n\n[ANSWER]Query: Como se obtienen los caudales afluentes utilizados en la programación del Sistema Eléctrico Nacional?\nFilters: 17 de agosto de 2023"""
 
-FINAL_ANSWER_INSTRUCTIONS = """You are now going to create the final answer to the user's [QUERY] by using the information found by the system. Create a highly detailed and accurate answer to solve the [QUERY]. You can use Markdown format. Be clear and concise. Use the same language as the user."""
+FINAL_ANSWER_INSTRUCTIONS = """You are now going to create the final answer to the user's [QUERY] based only in the information found in [CONTEXT] and the conversation between you and the user. Create a highly detailed and accurate answer to solve the [QUERY]. Remember to cite your sources. You can use Markdown format. Be clear and concise. Use the same language as the user."""

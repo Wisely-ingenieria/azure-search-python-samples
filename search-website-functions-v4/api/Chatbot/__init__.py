@@ -47,19 +47,68 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     openai.api_version = environment_vars["azure_openai_api_version"]
     openai.api_key = environment_vars["azure_openai_key"]
     
-    # Create Prompt
+    # Decompose query
     prompt = []
-    for message in messages:
-        prompt.append(message)
-    prompt.append({"role":"user", "content":query})
+    prompt.append({"role":"system", "content":f"{SYSTEM_MESSAGE}\n{DECOMPOSE_INSTRUCTIONS}"})
+    prompt.append({"role":"user", "content":f"{EXAMPLES_DECOMPOSE}\n[QUERY]\n{query}\n\n[ANSWER]"})
     response = openai.ChatCompletion.create(
         engine="gpt-35-turbo", 
         messages=prompt, 
         temperature=0.7
         )
     
-    logging.info(response)    
+    logging.info(response)
     
+    # Function Calling
+    openai.api_version = "2023-07-01-preview"
+    prompt = []
+    prompt.append({"role":"user", "content":response["choices"][0]["message"]["content"]})
+    response = openai.ChatCompletion.create(
+        engine="gpt-35-turbo", 
+        messages=prompt, 
+        functions=FUNCTIONS, 
+        temperature=0.7)
+    
+    logging.info(response)
+    
+    response_message = response["choices"][0]["message"]
+    if response_message.get("function_call"):
+        function_name = response_message["function_call"]["name"]
+        if function_name == "Search":
+            function_args = json.loads(response_message["function_call"]["arguments"])
+            function_response = azure_search(q=function_args.get("q"), semantic_enabled=True)
+        else:
+            function_response = f"Function '{function_name}' not found."
+    else:
+        function_response = "No function call found."
+        
+    logging.info(function_response)
+    
+    # Create context for final answer
+    search_results = function_response["results"]
+    if search_results:
+        context_str = ""
+        for result in search_results:
+            _filename = result["document"]["filename"]
+            _content = result["document"]["content"]
+            context_str += f"[FILE: {_filename}]\n{_content}\n\n"
+    else:
+        context_str = "No relevant information found."
+    
+    logging.info(f"Context:\n{context_str}")
+    
+    # Final answer
+    prompt = []
+    prompt.append({"role":"system", "content":f"{SYSTEM_MESSAGE}\n{FINAL_ANSWER_INSTRUCTIONS}"})
+    for message in messages:
+        prompt.append(message)
+    prompt.append({"role":"user", "content":f"[CONTEXT]\n{context_str}\n[QUERY]\n{query}\n\n[ANSWER]"})
+    response = openai.ChatCompletion.create(
+        engine="gpt-4",
+        messages=prompt,
+        temperature=0.7
+    )
+        
     return func.HttpResponse(
         body=json.dumps(response), mimetype="application/json", status_code=200
     )
