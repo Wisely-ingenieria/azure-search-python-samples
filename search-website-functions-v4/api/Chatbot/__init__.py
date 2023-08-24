@@ -76,9 +76,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         function_name = response_message["function_call"]["name"]
         if function_name == "Search":
             function_args = json.loads(response_message["function_call"]["arguments"])
-            function_response = azure_search(
-                q=function_args.get("q")
-            )
+            function_response = azure_search(q=function_args.get("q"), semantic_enabled=True)
         else:
             function_response = f"Function '{function_name}' not found."
     else:
