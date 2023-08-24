@@ -9,10 +9,6 @@ on:
     branches:
       - main
 
-env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'search-website-functions-v4/api'
-  PYTHON_VERSION: '3.9.x'
-
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -26,11 +22,15 @@ jobs:
       - name: API Python
         uses: actions/setup-python@v2
         with:
-            python-version: ${{ env.PYTHON_VERSION }}
+            python-version: '3.9'
+
+      - name: Display Python version
+        run: python --version
+
       - name: Install dependencies
         run: |
           python -m pip install --target=".python_packages/lib/site-packages" -r requirements.txt
-        working-directory: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        working-directory: 'search-website-functions-v4/api'
 
       - name: Build And Deploy
         id: builddeploy
