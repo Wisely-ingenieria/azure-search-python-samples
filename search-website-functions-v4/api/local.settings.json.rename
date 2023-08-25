@@ -3,6 +3,8 @@
   "Values": {
     "AzureWebJobsStorage": "",
     "FUNCTIONS_WORKER_RUNTIME": "python",
+    "python_version": "3.9",
+    "pythonVersion": "3.9",
     "SearchApiKey": "YOUR-SEARCH-QUERY-KEY",
     "SearchServiceName": "YOUR-SEARCH-RESOURCE-NAME",
     "SearchIndexName": "good-books",
@@ -10,5 +12,5 @@
   },
   "Host": {
     "CORS": "*"
-  } 
+  }
 }
