@@ -15,20 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
-
-      - name: API Python
-        uses: actions/setup-python@v2
-        with:
-            python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --target=".python_packages/lib/site-packages" -r requirements.txt
-        working-directory: 'search-website-functions-v4/api'
-
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -41,6 +30,9 @@ jobs:
           app_location: "/search-website-functions-v4/client" # App source code path
           api_location: "/search-website-functions-v4/api" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
+        env:
+          PYTHON_VERSION: 3.9.17
+          PRE_BUILD_COMMAND: "pip --upgrade pip && pip install -r requirements.txt"
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
