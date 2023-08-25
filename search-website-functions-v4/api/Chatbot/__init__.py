@@ -70,10 +70,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         temperature=0.7)
     
     logging.info(response)
-
-    return func.HttpResponse(
-        body=json.dumps(response), mimetype="application/json", status_code=200
-    )
     
     response_message = response["choices"][0]["message"]
     if response_message.get("function_call"):
